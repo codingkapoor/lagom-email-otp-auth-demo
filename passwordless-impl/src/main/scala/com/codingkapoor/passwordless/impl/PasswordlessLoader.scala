@@ -1,5 +1,6 @@
 package com.codingkapoor.passwordless.impl
 
+import com.codingkapoor.employee.api.EmployeeService
 import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceLocator}
 import com.lightbend.lagom.scaladsl.api.ServiceLocator.NoServiceLocator
 import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
@@ -8,8 +9,13 @@ import play.api.libs.ws.ahc.AhcWSComponents
 import com.softwaremill.macwire._
 import com.codingkapoor.passwordless.api.PasswordlessService
 
-abstract class PasswordlessApplication(context: LagomApplicationContext) extends LagomApplication(context) with AhcWSComponents {
+abstract class PasswordlessApplication(context: LagomApplicationContext)
+  extends LagomApplication(context)
+    with AhcWSComponents {
   override lazy val lagomServer: LagomServer = serverFor[PasswordlessService](wire[PasswordlessServiceImpl])
+
+  lazy val employeeService: EmployeeService = serviceClient.implement[EmployeeService]
+
 }
 
 class PasswordlessLoader extends LagomApplicationLoader {

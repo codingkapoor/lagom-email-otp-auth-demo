@@ -20,7 +20,7 @@ class EmployeeServiceImpl extends EmployeeService {
     if (found.nonEmpty)
       Future.successful(found.head)
     else
-      throw NotFound(s"No employee with id = $id found.")
+      throw NotFound(s"No employee found with id = $id.")
   }
 
   override def isEmployeeRegistered(email: String): ServiceCall[NotUsed, Boolean] = ServiceCall { _ =>
