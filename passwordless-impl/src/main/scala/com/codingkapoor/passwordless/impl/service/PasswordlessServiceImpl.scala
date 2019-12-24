@@ -1,17 +1,24 @@
-package com.codingkapoor.passwordless.impl
+package com.codingkapoor.passwordless.impl.service
 
 import akka.Done
 import com.codingkapoor.employee.api.EmployeeService
 import com.codingkapoor.passwordless.api.{PasswordlessService, Tokens}
 import com.lightbend.lagom.scaladsl.api.ServiceCall
 import com.lightbend.lagom.scaladsl.api.transport.NotFound
+
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
+import scala.util.Random
 
-class PasswordlessServiceImpl(employeeService: EmployeeService) extends PasswordlessService {
-  override def createOtp(): ServiceCall[Email, Done] = ServiceCall { email =>
+class PasswordlessServiceImpl(employeeService: EmployeeService, mailOTPService: MailOTPService) extends PasswordlessService {
+  override def createOTP(): ServiceCall[Email, Done] = ServiceCall { email =>
     employeeService.isEmployeeRegistered(email).invoke().map { res =>
-      if (res) Done else throw NotFound(s"No employee found with email id = $email")
+      if (res) {
+        val otp = 100000 + Random.nextInt(999999)
+        mailOTPService.sendOTP(email, otp)
+
+        Done
+      } else throw NotFound(s"No employee found with email id = $email")
     }
   }
 
@@ -20,7 +27,7 @@ class PasswordlessServiceImpl(employeeService: EmployeeService) extends Password
     Future.successful(Tokens(otp.toString, otp.toString))
   }
 
-  override def createJwt(): ServiceCall[Refresh, JWT] = ServiceCall { refresh =>
+  override def createJWT(): ServiceCall[Refresh, JWT] = ServiceCall { refresh =>
     // if the submitted refresh token is valid, create and reply with a new jwt
     Future.successful(refresh)
   }

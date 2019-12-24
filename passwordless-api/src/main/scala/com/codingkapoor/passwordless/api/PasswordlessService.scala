@@ -18,20 +18,20 @@ trait PasswordlessService extends Service {
   type Refresh = String
   type JWT = String
 
-  def createOtp(): ServiceCall[Email, Done]
+  def createOTP(): ServiceCall[Email, Done]
 
   def createTokens(): ServiceCall[OTP, Tokens]
 
-  def createJwt(): ServiceCall[Refresh, JWT]
+  def createJWT(): ServiceCall[Refresh, JWT]
 
   override def descriptor: Descriptor = {
     import Service._
 
     named("passwordless")
       .withCalls(
-        restCall(Method.POST, "/api/passwordless/otp", createOtp _),
+        restCall(Method.POST, "/api/passwordless/otp", createOTP _),
         restCall(Method.POST, "/api/passwordless/tokens", createTokens _),
-        restCall(Method.POST, "/api/passwordless/jwt", createJwt _)
+        restCall(Method.POST, "/api/passwordless/jwt", createJWT _)
       )
   }
 }

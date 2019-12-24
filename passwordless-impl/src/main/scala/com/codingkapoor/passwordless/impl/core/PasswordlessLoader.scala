@@ -1,21 +1,22 @@
-package com.codingkapoor.passwordless.impl
+package com.codingkapoor.passwordless.impl.core
 
 import com.codingkapoor.employee.api.EmployeeService
-import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceLocator}
+import com.codingkapoor.passwordless.api.PasswordlessService
+import com.codingkapoor.passwordless.impl.service.{MailOTPService, PasswordlessServiceImpl}
 import com.lightbend.lagom.scaladsl.api.ServiceLocator.NoServiceLocator
+import com.lightbend.lagom.scaladsl.api.{Descriptor, ServiceLocator}
 import com.lightbend.lagom.scaladsl.devmode.LagomDevModeComponents
 import com.lightbend.lagom.scaladsl.server.{LagomApplication, LagomApplicationContext, LagomApplicationLoader, LagomServer}
-import play.api.libs.ws.ahc.AhcWSComponents
 import com.softwaremill.macwire._
-import com.codingkapoor.passwordless.api.PasswordlessService
+import play.api.libs.ws.ahc.AhcWSComponents
 
 abstract class PasswordlessApplication(context: LagomApplicationContext)
   extends LagomApplication(context)
     with AhcWSComponents {
   override lazy val lagomServer: LagomServer = serverFor[PasswordlessService](wire[PasswordlessServiceImpl])
 
+  lazy val mailOTPService: MailOTPService = wire[MailOTPService]
   lazy val employeeService: EmployeeService = serviceClient.implement[EmployeeService]
-
 }
 
 class PasswordlessLoader extends LagomApplicationLoader {

@@ -13,6 +13,7 @@ val pac4jJwt = "org.pac4j" % "pac4j-jwt" % pac4jVersion
 val nimbusJoseJwt = "com.nimbusds" % "nimbus-jose-jwt" % "6.0"
 val macwire = "com.softwaremill.macwire" %% "macros" % "2.3.0" % "provided"
 val scalaTest = "org.scalatest" %% "scalatest" % "3.0.4" % Test
+val courier = "com.github.daddykotex" %% "courier" % "2.0.0"
 
 lazy val `lagom-email-otp-auth-demo` = (project in file("."))
   .aggregate(`employee-api`, `employee-impl`, `passwordless-api`, `passwordless-impl`)
@@ -53,7 +54,8 @@ lazy val `passwordless-impl` = (project in file("passwordless-impl"))
       nimbusJoseJwt,
       lagomScaladslTestKit,
       macwire,
-      scalaTest
+      scalaTest,
+      courier
     )
   )
   .settings(lagomForkedTestSettings)
