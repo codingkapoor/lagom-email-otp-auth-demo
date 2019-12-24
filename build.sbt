@@ -58,5 +58,3 @@ lazy val `passwordless-impl` = (project in file("passwordless-impl"))
   )
   .settings(lagomForkedTestSettings)
   .dependsOn(`passwordless-api`)
-
-lagomServiceGatewayAddress in ThisBuild := "0.0.0.0"
