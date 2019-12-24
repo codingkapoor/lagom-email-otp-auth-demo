@@ -1,5 +1,7 @@
 package com.codingkapoor.passwordless.impl
 
-class PasswordlessServiceImpl {
+import com.codingkapoor.passwordless.api.PasswordlessService
+
+class PasswordlessServiceImpl extends PasswordlessService {
 
 }
