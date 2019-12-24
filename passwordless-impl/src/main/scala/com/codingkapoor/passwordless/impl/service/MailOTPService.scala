@@ -4,6 +4,7 @@ import java.time.LocalDateTime
 
 import courier.Defaults._
 import courier._
+import org.slf4j.{Logger, LoggerFactory}
 import play.api.Configuration
 
 import scala.util.{Failure, Success}
@@ -28,13 +29,15 @@ class MailOTPService(config: Configuration) {
         .content(Text(BODY.format(otp, LocalDateTime.now())))
 
     mailer(envelope).onComplete {
-      case Success(_) =>
+      case Success(_) => log.info("OTP sent successfully.")
       case Failure(e) => e.printStackTrace()
     }
   }
 }
 
 object MailOTPService {
+  val log: Logger = LoggerFactory.getLogger(classOf[MailOTPService])
+
   final val SUBJECT = "%s is your OTP for login"
   final val BODY =
     """
@@ -60,8 +63,15 @@ object MailOTPService {
     val password: Option[String] = config.getOptional[String]("mail.password")
 
     if (interface.isEmpty || port.isEmpty || email.isEmpty || password.isEmpty)
-      throw new Exception("Mail configurations missing.")
+      log.warn("Mail configurations missing. Resorting to default configurations.")
 
-    Mail(email.getOrElse(""), password.getOrElse(""), SMTP(interface.getOrElse(""), port.getOrElse(587)))
+    Mail(
+      email.getOrElse("intimations@glassbeam.com"),
+      password.getOrElse("Qwerty@123"),
+      SMTP(
+        interface.getOrElse("mymail.myoutlookonline.com"),
+        port.getOrElse(587)
+      )
+    )
   }
 }
